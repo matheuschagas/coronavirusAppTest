@@ -45,7 +45,10 @@ export const AddUserComponent = (props) => {
           </Item>
         </Form>
       </Content>
-      <Button block style={{marginHorizontal: 10, marginVertical: 20}}>
+      <Button
+        onPress={props.add}
+        block
+        style={{marginHorizontal: 10, marginVertical: 20}}>
         <Text>Add</Text>
       </Button>
     </Container>
