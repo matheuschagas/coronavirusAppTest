@@ -25,23 +25,23 @@ export const AddUserComponent = (props) => {
         <Form>
           <Item floatingLabel>
             <Label>Name</Label>
-            <Input />
+            <Input value={props.name} onChangeText={props.setName} />
           </Item>
           <Item floatingLabel>
             <Label>Phone</Label>
-            <Input />
+            <Input value={props.phone} onChangeText={props.setPhone} />
           </Item>
           <Item floatingLabel>
             <Label>Age</Label>
-            <Input />
+            <Input value={props.age} onChangeText={props.setAge} />
           </Item>
           <Item floatingLabel>
             <Label>Address</Label>
-            <Input />
+            <Input value={props.address} onChangeText={props.setAddress} />
           </Item>
           <Item floatingLabel last>
             <Label>Symptoms</Label>
-            <Input />
+            <Input value={props.symptoms} onChangeText={props.setSymptoms} />
           </Item>
         </Form>
       </Content>
