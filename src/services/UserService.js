@@ -1,15 +1,17 @@
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import {StorageService} from './StorageService';
+
 export class UserService {
   //Add an user to storage
   static async add(name, phone, age, address, symptoms) {
-    let usersStorage = await AsyncStorage.getItem('@users');
+    //TODO alert user if name and phone already in storage
+    let usersStorage = await StorageService.getItem('@users');
     let users = {};
     //check if @users are already initiated and parse the JSON string
     if (usersStorage) {
       users = JSON.parse(usersStorage);
     }
     users[name + phone] = {name, phone, age, address, symptoms};
-    AsyncStorage.setItem('@users', JSON.stringify(users));
+    StorageService.setItem('@users', JSON.stringify(users));
   }
 
   static async remove(name, phone) {}
