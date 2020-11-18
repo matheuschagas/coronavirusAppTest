@@ -1,4 +1,4 @@
-#Requisites
+# Requisites
 
 * Yarn or Npm
 * Cocoapods to run iOS
@@ -11,7 +11,7 @@
 2. run `cd ios && pod install && cd ..`
 3. run `yarn android` to run Android or `yarn ios` to run iOS
 
-#Project Structure
+# Project Structure
 
 * Screens are inside `src/screens`
 * Components are inside `src/components`
@@ -19,6 +19,6 @@
 * Services are inside `src/services`
 * Navigators are inside `src/navigation`
 
-###Screens
+### Screens
 
 The screen's logic are in files named `Controller` and the view are in files named `Component`
