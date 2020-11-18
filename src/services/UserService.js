@@ -8,7 +8,7 @@ export class UserService {
     let users = {};
     //check if @users are already initiated and parse the JSON string
     if (usersStorage) {
-      users = JSON.parse(usersStorage);
+      users = usersStorage;
     }
     users[name + phone] = {name, phone, age, address, symptoms};
     await StorageService.set('@users', JSON.stringify(users));
