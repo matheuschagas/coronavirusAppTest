@@ -11,7 +11,7 @@ export class UserService {
       users = usersStorage;
     }
     if (!address) {
-      throw new Error('Erro ao consultar endereço');
+      throw new Error('Failed looking for address');
     }
     users[name + phone] = {name, phone, age, address, symptoms};
     await StorageService.set('@users', users);
