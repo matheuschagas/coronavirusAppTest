@@ -9,6 +9,7 @@
 
 1. run `yarn` or `npm i`
 2. run `cd ios && pod install && cd ..`
+3. create a `.env` file, you can just copy `.env.sample` or rename it
 3. run `yarn android` to run Android or `yarn ios` to run iOS
 
 # Project Structure

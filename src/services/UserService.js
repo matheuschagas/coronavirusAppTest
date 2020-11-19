@@ -10,8 +10,11 @@ export class UserService {
     if (usersStorage) {
       users = usersStorage;
     }
+    if (!address) {
+      throw new Error('Erro ao consultar endereço');
+    }
     users[name + phone] = {name, phone, age, address, symptoms};
-    await StorageService.set('@users', JSON.stringify(users));
+    await StorageService.set('@users', users);
   }
 
   //TODO remove user
@@ -22,5 +25,7 @@ export class UserService {
   static async update(key, name, phone, age, address, symptoms) {}
 
   //TODO handle filters
-  static get(filter = {}) {}
+  static async get(filter = {}) {
+    return await StorageService.get('@users');
+  }
 }

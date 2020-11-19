@@ -9,12 +9,14 @@ import {
   openSettings,
   request,
 } from 'react-native-permissions';
+import {GeolocationService} from '../../services/GeolocationService';
 
 export const AddUserController = (props) => {
   const [name, setName] = useState('');
   const [phone, setPhone] = useState('');
   const [age, setAge] = useState('');
   const [address, setAddress] = useState('');
+  const [fullAddress, setFullAddress] = useState({});
   const [symptoms, setSymptoms] = useState('');
   const [geolocationGranted, setGeolocationGranted] = useState(false);
 
@@ -49,11 +51,18 @@ export const AddUserController = (props) => {
   const add = async () => {
     ///TODO add a loader
     try {
-      await UserService.add(name, phone, age, address, symptoms);
+      let geoAddress = fullAddress;
+      if (!fullAddress.latitude) {
+        console.log(address);
+        geoAddress = await GeolocationService.getCoordinates(address);
+      }
+      console.log(geoAddress);
+      await UserService.add(name, phone, age, geoAddress, symptoms);
       setName('');
       setPhone('');
       setAge('');
       setAddress('');
+      setFullAddress({});
       setSymptoms('');
       props.navigation.navigate('Users');
     } catch (e) {
