@@ -11,7 +11,10 @@ import {
   Label,
   Button,
   Text,
+  Icon,
 } from 'native-base';
+
+import FontAwesome from 'react-native-vector-icons/FontAwesome';
 
 export const AddUserComponent = (props) => {
   return (
@@ -37,6 +40,14 @@ export const AddUserComponent = (props) => {
           </Item>
           <Item floatingLabel>
             <Label>Address</Label>
+            <Icon
+              type="FontAwesome"
+              onPress={() => {
+                console.log('a');
+              }}
+              name="location-arrow"
+              style={{color: props.geolocationGranted ? 'blue' : 'black'}}
+            />
             <Input value={props.address} onChangeText={props.setAddress} />
           </Item>
           <Item floatingLabel last>
