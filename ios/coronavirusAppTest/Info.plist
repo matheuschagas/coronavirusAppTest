@@ -2,10 +2,6 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
-	<string>We will use your location to track covid-19 cases</string>
-	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>We will use your location to track covid-19 cases</string>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>en</string>
 	<key>CFBundleDisplayName</key>
@@ -41,6 +37,8 @@
 			</dict>
 		</dict>
 	</dict>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>We will use your location to track covid-19 cases</string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>AntDesign.ttf</string>

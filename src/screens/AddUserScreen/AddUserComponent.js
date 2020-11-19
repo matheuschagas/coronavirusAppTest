@@ -12,6 +12,7 @@ import {
   Button,
   Text,
   Icon,
+  Spinner,
 } from 'native-base';
 
 export const AddUserComponent = (props) => {
@@ -26,15 +27,29 @@ export const AddUserComponent = (props) => {
         <Form>
           <Item floatingLabel>
             <Label>Name</Label>
-            <Input value={props.name} onChangeText={props.setName} />
+            <Input
+              value={props.name}
+              returnKeyType={'next'}
+              onChangeText={props.setName}
+            />
           </Item>
           <Item floatingLabel>
             <Label>Phone</Label>
-            <Input value={props.phone} onChangeText={props.setPhone} />
+            <Input
+              returnKeyType={'next'}
+              keyboardType={'phone-pad'}
+              value={props.phone}
+              onChangeText={props.setPhone}
+            />
           </Item>
           <Item floatingLabel>
             <Label>Age</Label>
-            <Input value={props.age} onChangeText={props.setAge} />
+            <Input
+              returnKeyType={'next'}
+              keyboardType={'number-pad'}
+              value={props.age}
+              onChangeText={props.setAge}
+            />
           </Item>
           <Item floatingLabel>
             <Label>Address</Label>
@@ -45,14 +60,22 @@ export const AddUserComponent = (props) => {
                   props.getCoordinates();
                 }
               }}
-              name="location-arrow"
+              name="map"
               style={{color: props.geolocationGranted ? 'blue' : 'black'}}
             />
-            <Input value={props.address} onChangeText={props.setAddress} />
+            <Input
+              returnKeyType={'next'}
+              value={props.address}
+              onChangeText={props.setAddress}
+            />
           </Item>
-          <Item floatingLabel last>
+          <Item floatingLabel>
             <Label>Symptoms</Label>
-            <Input value={props.symptoms} onChangeText={props.setSymptoms} />
+            <Input
+              returnKeyType={'done'}
+              value={props.symptoms}
+              onChangeText={props.setSymptoms}
+            />
           </Item>
         </Form>
       </Content>
@@ -60,6 +83,7 @@ export const AddUserComponent = (props) => {
         onPress={props.add}
         block
         style={{marginHorizontal: 10, marginVertical: 20}}>
+        {props.loading && <Spinner />}
         <Text>Add</Text>
       </Button>
     </Container>

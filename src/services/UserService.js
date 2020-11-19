@@ -3,7 +3,21 @@ import {StorageService} from './StorageService';
 export class UserService {
   //Add an user to storage
   static async add(name, phone, age, address, symptoms) {
-    //TODO alert user if name and phone already in storage
+    let fieldErrors = [];
+    if (name.length === 0) {
+      fieldErrors.push('name');
+    }
+    if (phone.length === 0) {
+      fieldErrors.push('phone');
+    }
+    if (age.length === 0) {
+      fieldErrors.push('age');
+    }
+    if (fieldErrors.length > 0) {
+      throw new Error(
+        `The following fields are required: ${fieldErrors.join(', ')}`,
+      );
+    }
     let usersStorage = await StorageService.get('@users');
     let users = {};
     //check if @users are already initiated and parse the JSON string
@@ -12,6 +26,9 @@ export class UserService {
     }
     if (!address) {
       throw new Error('Failed looking for address');
+    }
+    if (users[name + phone]) {
+      throw new Error('User already exists');
     }
     users[name + phone] = {name, phone, age, address, symptoms};
     await StorageService.set('@users', users);

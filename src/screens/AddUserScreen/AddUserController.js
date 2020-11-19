@@ -10,7 +10,7 @@ import {
   request,
 } from 'react-native-permissions';
 import {GeolocationService} from '../../services/GeolocationService';
-import Geolocation from '@react-native-community/geolocation';
+import Geolocation from 'react-native-geolocation-service';
 
 export const AddUserController = (props) => {
   const [name, setName] = useState('');
@@ -20,6 +20,7 @@ export const AddUserController = (props) => {
   const [fullAddress, setFullAddress] = useState({});
   const [symptoms, setSymptoms] = useState('');
   const [geolocationGranted, setGeolocationGranted] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const askGeolocationPermission = () => {
     let permission =
@@ -49,6 +50,7 @@ export const AddUserController = (props) => {
   const getCoordinates = () => {
     Geolocation.getCurrentPosition(
       async (info) => {
+        console.log(info);
         let coords = await GeolocationService.getAddress({
           lat: info.coords.latitude,
           lon: info.coords.longitude,
@@ -56,8 +58,14 @@ export const AddUserController = (props) => {
         setFullAddress(coords);
         setAddress(coords.label);
       },
-      () => {},
-      {enableHighAccuracy: true},
+      (err) => {
+        console.log(err);
+      },
+      {
+        maximumAge: 1000,
+        timeout: 5000,
+        distanceFilter: 10,
+      },
     );
   };
 
@@ -67,22 +75,25 @@ export const AddUserController = (props) => {
 
   //Add a user, reset the form info and navigate to User tab
   const add = async () => {
-    ///TODO add a loader
-    try {
-      let geoAddress = fullAddress;
-      if (!fullAddress.latitude) {
-        geoAddress = await GeolocationService.getCoordinates(address);
+    if (!loading) {
+      setLoading(true);
+      try {
+        let geoAddress = fullAddress;
+        if (geoAddress.latitude !== undefined && geoAddress.latitude !== null) {
+          geoAddress = await GeolocationService.getCoordinates(address);
+        }
+        await UserService.add(name, phone, age, geoAddress, symptoms);
+        setName('');
+        setPhone('');
+        setAge('');
+        setAddress('');
+        setFullAddress({});
+        setSymptoms('');
+        props.navigation.navigate('Users');
+      } catch (e) {
+        Alert.alert('Oops!', e.message);
       }
-      await UserService.add(name, phone, age, geoAddress, symptoms);
-      setName('');
-      setPhone('');
-      setAge('');
-      setAddress('');
-      setFullAddress({});
-      setSymptoms('');
-      props.navigation.navigate('Users');
-    } catch (e) {
-      Alert.alert('Ops!', e.message);
+      setLoading(false);
     }
   };
   return (
@@ -100,6 +111,7 @@ export const AddUserController = (props) => {
       add={add}
       geolocationGranted={geolocationGranted}
       getCoordinates={getCoordinates}
+      loading={loading}
     />
   );
 };
