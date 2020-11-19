@@ -34,13 +34,11 @@ export const AddUserController = (props) => {
             request(PERMISSIONS.IOS.LOCATION_WHEN_IN_USE).then((res) => {
               if (res === RESULTS.GRANTED) {
                 setGeolocationGranted(true);
-                getCoordinates();
               }
             });
             break;
           case RESULTS.GRANTED:
             setGeolocationGranted(true);
-            getCoordinates();
             break;
         }
       })
@@ -96,6 +94,10 @@ export const AddUserController = (props) => {
       setLoading(false);
     }
   };
+
+  const navigateToMap = () => {
+    props.navigation.navigate('Details');
+  };
   return (
     <AddUserComponent
       name={name}
@@ -109,8 +111,7 @@ export const AddUserController = (props) => {
       symptoms={symptoms}
       setSymptoms={setSymptoms}
       add={add}
-      geolocationGranted={geolocationGranted}
-      getCoordinates={getCoordinates}
+      navigateToMap={navigateToMap}
       loading={loading}
     />
   );

@@ -55,13 +55,9 @@ export const AddUserComponent = (props) => {
             <Label>Address</Label>
             <Icon
               type="FontAwesome"
-              onPress={() => {
-                if (props.geolocationGranted) {
-                  props.getCoordinates();
-                }
-              }}
+              onPress={props.navigateToMap}
               name="map"
-              style={{color: props.geolocationGranted ? 'blue' : 'black'}}
+              style={{color: 'blue'}}
             />
             <Input
               returnKeyType={'next'}
