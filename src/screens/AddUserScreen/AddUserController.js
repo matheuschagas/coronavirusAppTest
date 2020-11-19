@@ -10,6 +10,7 @@ import {
   request,
 } from 'react-native-permissions';
 import {GeolocationService} from '../../services/GeolocationService';
+import Geolocation from '@react-native-community/geolocation';
 
 export const AddUserController = (props) => {
   const [name, setName] = useState('');
@@ -32,15 +33,32 @@ export const AddUserController = (props) => {
             request(PERMISSIONS.IOS.LOCATION_WHEN_IN_USE).then((res) => {
               if (res === RESULTS.GRANTED) {
                 setGeolocationGranted(true);
+                getCoordinates();
               }
             });
             break;
           case RESULTS.GRANTED:
             setGeolocationGranted(true);
+            getCoordinates();
             break;
         }
       })
       .catch((error) => {});
+  };
+
+  const getCoordinates = () => {
+    Geolocation.getCurrentPosition(
+      async (info) => {
+        let coords = await GeolocationService.getAddress({
+          lat: info.coords.latitude,
+          lon: info.coords.longitude,
+        });
+        setFullAddress(coords);
+        setAddress(coords.label);
+      },
+      () => {},
+      {enableHighAccuracy: true},
+    );
   };
 
   useEffect(() => {
@@ -53,10 +71,8 @@ export const AddUserController = (props) => {
     try {
       let geoAddress = fullAddress;
       if (!fullAddress.latitude) {
-        console.log(address);
         geoAddress = await GeolocationService.getCoordinates(address);
       }
-      console.log(geoAddress);
       await UserService.add(name, phone, age, geoAddress, symptoms);
       setName('');
       setPhone('');
@@ -83,6 +99,7 @@ export const AddUserController = (props) => {
       setSymptoms={setSymptoms}
       add={add}
       geolocationGranted={geolocationGranted}
+      getCoordinates={getCoordinates}
     />
   );
 };

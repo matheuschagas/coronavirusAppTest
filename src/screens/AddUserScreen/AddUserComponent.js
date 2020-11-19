@@ -14,8 +14,6 @@ import {
   Icon,
 } from 'native-base';
 
-import FontAwesome from 'react-native-vector-icons/FontAwesome';
-
 export const AddUserComponent = (props) => {
   return (
     <Container>
@@ -43,7 +41,9 @@ export const AddUserComponent = (props) => {
             <Icon
               type="FontAwesome"
               onPress={() => {
-                console.log('a');
+                if (props.geolocationGranted) {
+                  props.getCoordinates();
+                }
               }}
               name="location-arrow"
               style={{color: props.geolocationGranted ? 'blue' : 'black'}}
