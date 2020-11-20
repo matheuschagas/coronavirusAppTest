@@ -1,5 +1,5 @@
 import React, {useRef, useEffect} from 'react';
-import {Container, Button, Icon, Text} from 'native-base';
+import {Icon, Text} from 'native-base';
 import {SafeAreaView, View} from 'react-native';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import MapView, {Marker, PROVIDER_GOOGLE} from 'react-native-maps';

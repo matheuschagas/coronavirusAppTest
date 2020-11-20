@@ -7,10 +7,11 @@
 
 # Setup
 
-1. run `yarn` or `npm i`
-2. run `cd ios && pod install && cd ..`
-3. create a `.env` file, you can just copy `.env.sample` or rename it
-3. run `yarn android` to run Android or `yarn ios` to run iOS
+1. Clone the repo
+1. Run `yarn` or `npm i`
+1. Run `cd ios && pod install && cd ..`
+1. Create a `.env` file, you can just copy `.env.sample` or rename it
+1. Run `yarn android` to run Android or `yarn ios` to run iOS
 
 # Project Structure
 
