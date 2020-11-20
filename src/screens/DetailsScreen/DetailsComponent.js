@@ -29,8 +29,17 @@ export const DetailsComponent = (props) => {
           style={{zIndex: -1}}
           ref={markerRef}
           coordinate={props.initialPinCoordinates}
-          draggable
-          description={props.placeName}
+          draggable={!props.user}
+          title={
+            props.user
+              ? `${props.user[1].name} - ${props.user[1].age}`
+              : undefined
+          }
+          description={
+            props.user
+              ? `${props.user[1].phone}\n${props.placeName}\n\n${props.user[1].symptoms}`
+              : props.placeName
+          }
           onDragStart={() => {
             props.resetPlaceName();
           }}

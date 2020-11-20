@@ -9,8 +9,22 @@ export const DetailsController = (props) => {
   const [initialPinCoordinates, setInitialPinCoordinates] = useState({});
   const [placeName, setPlaceName] = useState('Loading...');
   const [geolocation, setGeolocation] = useState({});
+  const user = props.route.params?.user;
   useEffect(() => {
-    getCoordinates();
+    if (user) {
+      let coords = {
+        latitude: user[1].address.latitude,
+        longitude: user[1].address.longitude,
+        latitudeDelta: 0.02,
+        longitudeDelta: 0.02,
+      };
+      setInitialPinCoordinates(coords);
+      setPinCoordinates(coords);
+      setGeolocation(coords);
+      setPlaceName(user[1].address.label);
+    } else {
+      getCoordinates();
+    }
   }, []);
 
   const getPlaceName = _.debounce(async ({lat, lon}) => {
@@ -50,7 +64,7 @@ export const DetailsController = (props) => {
     );
   };
   const goBack = (done = false) => {
-    if (done) {
+    if (done && !user) {
       props.navigation.navigate('Add User', {geolocation});
     } else {
       props.navigation.goBack();
@@ -68,6 +82,7 @@ export const DetailsController = (props) => {
       resetPlaceName={resetPlaceName}
       getPlaceName={getPlaceName}
       setPinCoordinates={setPinCoordinates}
+      user={user}
     />
   );
 };
