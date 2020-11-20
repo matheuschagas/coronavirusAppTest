@@ -1,38 +1,39 @@
-import React from 'react';
-import {
-  Body,
-  Container,
-  Header,
-  Title,
-  Content,
-  Left,
-  Button,
-  Icon,
-  Right,
-  Text,
-} from 'native-base';
-import {SafeAreaView} from 'react-native';
+import React, {useRef, useEffect} from 'react';
+import {Container, Button, Icon, Text} from 'native-base';
+import {SafeAreaView, View} from 'react-native';
+import {TouchableOpacity} from 'react-native-gesture-handler';
 import MapView, {Marker, PROVIDER_GOOGLE} from 'react-native-maps';
 
+/*
+The use of TouchableOpacity from react-native-gesture-handle is a workaround
+because there is an issue at react-native-maps:
+https://github.com/react-native-maps/react-native-maps/issues/2780
+*/
+
 export const DetailsComponent = (props) => {
+  const markerRef = useRef();
+  useEffect(() => {
+    markerRef.current.showCallout();
+  }, [props.pinCoordinates]);
   return (
-    <Container>
+    <View style={{flex: 1}}>
       <MapView
-        style={{flex: 1}}
+        style={{
+          flex: 1,
+          zIndex: -1,
+        }}
+        loadingEnabled
         provider={PROVIDER_GOOGLE}
-        initialRegion={{
-          ...props.pinCoordinates,
-        }}>
+        region={props.pinCoordinates}>
         <Marker
-          ref={(ref) => {
-            if (ref) {
-              ref.showCallout();
-            }
-          }}
-          coordinate={props.pinCoordinates}
+          style={{zIndex: -1}}
+          ref={markerRef}
+          coordinate={props.initialPinCoordinates}
           draggable
-          onDragStart={props.resetPlaceName}
           description={props.placeName}
+          onDragStart={() => {
+            props.resetPlaceName();
+          }}
           onDragEnd={(e) => {
             props.getPlaceName({
               lat: e.nativeEvent.coordinate.latitude,
@@ -41,22 +42,35 @@ export const DetailsComponent = (props) => {
           }}
         />
       </MapView>
-
       <SafeAreaView style={{position: 'absolute', top: 0, left: 0}}>
-        <Button transparent onPress={props.goBack}>
+        <TouchableOpacity style={{padding: 10}} onPress={props.goBack}>
           <Icon name="arrow-back" />
-        </Button>
+        </TouchableOpacity>
       </SafeAreaView>
-      <Button
-        block
+      <SafeAreaView
         style={{
           position: 'absolute',
           bottom: 15,
-          alignSelf: 'center',
-          width: '90%',
+          width: '100%',
         }}>
-        <Text>Done</Text>
-      </Button>
-    </Container>
+        <TouchableOpacity
+          disabled={props.placeName === 'Loading...'}
+          onPress={() => {
+            props.goBack(true);
+          }}
+          style={{
+            alignSelf: 'center',
+            width: '90%',
+            alignItems: 'center',
+            justifyContent: 'center',
+            backgroundColor:
+              props.placeName === 'Loading...' ? 'rgba(0,0,0,0.5)' : 'black',
+            paddingVertical: 15,
+            borderRadius: 5,
+          }}>
+          <Text style={{color: 'white'}}>Done</Text>
+        </TouchableOpacity>
+      </SafeAreaView>
+    </View>
   );
 };

@@ -45,6 +45,13 @@ export const AddUserController = (props) => {
       .catch((error) => {});
   };
 
+  useEffect(() => {
+    if (props.route.params?.geolocation) {
+      setFullAddress(props.route.params.geolocation);
+      setAddress(props.route.params.geolocation.label);
+    }
+  }, [props.route.params?.geolocation]);
+
   const getCoordinates = () => {
     Geolocation.getCurrentPosition(
       async (info) => {

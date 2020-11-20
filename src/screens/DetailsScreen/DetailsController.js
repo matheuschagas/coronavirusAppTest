@@ -5,29 +5,33 @@ import {GeolocationService} from '../../services/GeolocationService';
 import _ from 'lodash';
 
 export const DetailsController = (props) => {
-  const [pinCoordinates, setPinCoordinates] = useState({
-    latitude: 0,
-    longitude: 0,
-    latitudeDelta: 0.02,
-    longitudeDelta: 0.02,
-  });
+  const [pinCoordinates, setPinCoordinates] = useState({});
+  const [initialPinCoordinates, setInitialPinCoordinates] = useState({});
   const [placeName, setPlaceName] = useState('Loading...');
+  const [geolocation, setGeolocation] = useState({});
   useEffect(() => {
     getCoordinates();
   }, []);
 
   const getPlaceName = _.debounce(async ({lat, lon}) => {
+    setPinCoordinates({
+      latitude: lat,
+      longitude: lon,
+      latitudeDelta: 0.02,
+      longitudeDelta: 0.02,
+    });
     let coords = await GeolocationService.getAddress({
       lat,
       lon,
     });
     setPlaceName(coords.label);
+    setGeolocation(coords);
   }, 1000);
 
   const getCoordinates = () => {
     Geolocation.getCurrentPosition(
       async (info) => {
-        setPinCoordinates({
+        setInitialPinCoordinates({
           latitude: info.coords.latitude,
           longitude: info.coords.longitude,
           latitudeDelta: 0.02,
@@ -45,8 +49,12 @@ export const DetailsController = (props) => {
       },
     );
   };
-  const goBack = () => {
-    props.navigation.goBack();
+  const goBack = (done = false) => {
+    if (done) {
+      props.navigation.navigate('Add User', {geolocation});
+    } else {
+      props.navigation.goBack();
+    }
   };
   const resetPlaceName = () => {
     setPlaceName('Loading...');
@@ -56,6 +64,7 @@ export const DetailsController = (props) => {
       goBack={goBack}
       placeName={placeName}
       pinCoordinates={pinCoordinates}
+      initialPinCoordinates={initialPinCoordinates}
       resetPlaceName={resetPlaceName}
       getPlaceName={getPlaceName}
       setPinCoordinates={setPinCoordinates}
