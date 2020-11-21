@@ -39,3 +39,19 @@ jest.doMock('react-native', () => {
     ReactNative,
   );
 });
+
+jest.doMock('@react-native-async-storage/async-storage', () => {
+  const AsyncStorage = {
+    items: {},
+    getItem: (name) => {
+      return AsyncStorage.items[name];
+    },
+    setItem: (name, value) => {
+      AsyncStorage.items[name] = value;
+    },
+    removeItem: (name) => {
+      delete AsyncStorage.items[name];
+    },
+  };
+  return AsyncStorage;
+});

@@ -4,16 +4,16 @@ export class UserService {
   //Add an user to storage
   static async add(name, phone, age, address, symptoms) {
     let fieldErrors = [];
-    if (name.length === 0) {
+    if (!name || name.length === 0) {
       fieldErrors.push('name');
     }
-    if (phone.length === 0) {
+    if (!phone || phone.length === 0) {
       fieldErrors.push('phone');
     }
-    if (age.length === 0) {
+    if (!age || age.length === 0) {
       fieldErrors.push('age');
     }
-    if (!address.label) {
+    if (!address || !address.label) {
       fieldErrors.push('address');
     }
     if (fieldErrors.length > 0) {
