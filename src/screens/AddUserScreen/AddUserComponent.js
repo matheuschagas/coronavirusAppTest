@@ -57,7 +57,7 @@ export const AddUserComponent = (props) => {
               type="FontAwesome"
               onPress={props.navigateToMap}
               name="map"
-              style={{color: 'blue'}}
+              style={{color: 'black'}}
             />
             <Input
               returnKeyType={'next'}
@@ -78,7 +78,11 @@ export const AddUserComponent = (props) => {
       <Button
         onPress={props.add}
         block
-        style={{marginHorizontal: 10, marginVertical: 20}}>
+        style={{
+          marginHorizontal: 10,
+          marginVertical: 20,
+          backgroundColor: 'black',
+        }}>
         {props.loading && <Spinner />}
         <Text>Add</Text>
       </Button>

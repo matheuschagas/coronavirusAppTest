@@ -24,7 +24,7 @@ export const TabBar = (props) => {
         },
       })}
       tabBarOptions={{
-        activeTintColor: 'tomato',
+        activeTintColor: 'black',
         inactiveTintColor: 'gray',
       }}>
       <Tab.Screen name={'Users'} component={UserController} />
