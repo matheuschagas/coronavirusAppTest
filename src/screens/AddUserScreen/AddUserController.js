@@ -31,7 +31,7 @@ export const AddUserController = (props) => {
       .then((result) => {
         switch (result) {
           case RESULTS.DENIED:
-            request(PERMISSIONS.IOS.LOCATION_WHEN_IN_USE).then((res) => {
+            request(permission).then((res) => {
               if (res === RESULTS.GRANTED) {
                 setGeolocationGranted(true);
               }
@@ -42,7 +42,9 @@ export const AddUserController = (props) => {
             break;
         }
       })
-      .catch((error) => {});
+      .catch((error) => {
+        console.log(error);
+      });
   };
 
   useEffect(() => {
@@ -105,7 +107,7 @@ export const AddUserController = (props) => {
   };
 
   const navigateToMap = () => {
-    props.navigation.navigate('Details');
+    props.navigation.navigate('Details', {geolocationGranted});
   };
   return (
     <AddUserComponent
