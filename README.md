@@ -35,4 +35,4 @@ The screen's logic are in files named `Controller` and the view are in files nam
 ## Future improvements
 
 * Create an icon and splash screen.
-* The Google Maps API is hardcoded on Android and iOS projects, in future we should put it on an environment variable to be used by CD/CI as Fastlane.tools
+* The Google Maps API Key is hardcoded on Android and iOS projects, in future we should put it on an environment variable to be used by CD/CI as Fastlane.tools
