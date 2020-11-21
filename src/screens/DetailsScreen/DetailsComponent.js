@@ -32,7 +32,7 @@ export const DetailsComponent = (props) => {
           draggable={!props.user}
           title={
             props.user
-              ? `${props.user[1].name} - ${props.user[1].age}`
+              ? `${props.user[1].name} - ${props.user[1].age}y`
               : undefined
           }
           description={

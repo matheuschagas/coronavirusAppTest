@@ -55,7 +55,6 @@ export const AddUserController = (props) => {
   const getCoordinates = () => {
     Geolocation.getCurrentPosition(
       async (info) => {
-        console.log(info);
         let coords = await GeolocationService.getAddress({
           lat: info.coords.latitude,
           lon: info.coords.longitude,
@@ -84,7 +83,10 @@ export const AddUserController = (props) => {
       setLoading(true);
       try {
         let geoAddress = fullAddress;
-        if (geoAddress.latitude !== undefined && geoAddress.latitude !== null) {
+        if (
+          (geoAddress.latitude === undefined || geoAddress.latitude === null) &&
+          address.length > 0
+        ) {
           geoAddress = await GeolocationService.getCoordinates(address);
         }
         await UserService.add(name, phone, age, geoAddress, symptoms);

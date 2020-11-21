@@ -1,13 +1,13 @@
 import React, {useEffect, useState} from 'react';
 import {UserComponent} from './UserComponent';
 import {UserService} from '../../services/UserService';
+import {StorageService} from '../../services/StorageService';
 
 export const UserController = (props) => {
   const [users, setUsers] = useState([]);
   const getUsers = async () => {
     //await StorageService.remove('@users');
-    setUsers(Object.entries(await UserService.get()));
-    console.log(await UserService.get());
+    setUsers(await UserService.get());
   };
   useEffect(() => {
     const unsubscribe = props.navigation.addListener('focus', () => {

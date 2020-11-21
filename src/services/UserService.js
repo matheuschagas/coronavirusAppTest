@@ -13,6 +13,9 @@ export class UserService {
     if (age.length === 0) {
       fieldErrors.push('age');
     }
+    if (!address.label) {
+      fieldErrors.push('address');
+    }
     if (fieldErrors.length > 0) {
       throw new Error(
         `The following fields are required: ${fieldErrors.join(', ')}`,
@@ -23,9 +26,6 @@ export class UserService {
     //check if @users are already initiated and parse the JSON string
     if (usersStorage) {
       users = usersStorage;
-    }
-    if (!address) {
-      throw new Error('Failed looking for address');
     }
     if (users[name + phone]) {
       throw new Error('User already exists');
@@ -43,6 +43,29 @@ export class UserService {
 
   //TODO handle filters
   static async get(filter = {}) {
-    return await StorageService.get('@users');
+    let rawUsers = await StorageService.get('@users');
+    let users = [];
+    if (rawUsers) {
+      users = Object.entries(rawUsers);
+      users.sort((a, b) => {
+        let countryA = a[1].address?.country_code?.toLowerCase();
+        let countryB = b[1].address?.country_code?.toLowerCase();
+        if (countryA < countryB) {
+          return -1;
+        } else if (countryA > countryB) {
+          return 1;
+        } else {
+          let nameA = a[1].name.toLowerCase();
+          let nameB = b[1].name.toLowerCase();
+          if (nameA < nameB) {
+            return -1;
+          } else if (nameA > nameB) {
+            return 1;
+          }
+          return 0;
+        }
+      });
+    }
+    return users;
   }
 }
