@@ -1,8 +1,8 @@
 import React, {useRef, useEffect} from 'react';
-import {Icon, Text} from 'native-base';
-import {SafeAreaView, View} from 'react-native';
+import {Icon, Text, H3} from 'native-base';
+import {SafeAreaView, View, Platform} from 'react-native';
 import {TouchableOpacity} from 'react-native-gesture-handler';
-import MapView, {Marker, PROVIDER_GOOGLE} from 'react-native-maps';
+import MapView, {Marker, PROVIDER_GOOGLE, Callout} from 'react-native-maps';
 
 /*
 The use of TouchableOpacity from react-native-gesture-handle is a workaround
@@ -13,44 +13,52 @@ https://github.com/react-native-maps/react-native-maps/issues/2780
 export const DetailsComponent = (props) => {
   const markerRef = useRef();
   useEffect(() => {
-    markerRef.current.showCallout();
-  }, [props.pinCoordinates]);
+    //check if placeName updated and show callout on map marker
+    //the timeout is a workaround related to a issue on react-native-maps
+    if (markerRef.current) {
+      markerRef.current.hideCallout();
+      setTimeout(() => {
+        markerRef.current.showCallout();
+      }, 100);
+    }
+  }, [props.placeName]);
   return (
     <View style={{flex: 1}}>
-      <MapView
-        style={{
-          flex: 1,
-          zIndex: -1,
-        }}
-        loadingEnabled
-        provider={PROVIDER_GOOGLE}
-        region={props.pinCoordinates}>
-        <Marker
-          style={{zIndex: -1}}
-          ref={markerRef}
-          coordinate={props.initialPinCoordinates}
-          draggable={!props.user}
-          title={
-            props.user
-              ? `${props.user[1].name} - ${props.user[1].age}y`
-              : undefined
-          }
-          description={
-            props.user
-              ? `${props.user[1].phone}\n${props.placeName}\n\n${props.user[1].symptoms}`
-              : props.placeName
-          }
-          onDragStart={() => {
-            props.resetPlaceName();
+      {props.initialPinCoordinates.latitude && (
+        <MapView
+          style={{
+            flex: 1,
           }}
-          onDragEnd={(e) => {
-            props.getPlaceName({
-              lat: e.nativeEvent.coordinate.latitude,
-              lon: e.nativeEvent.coordinate.longitude,
-            });
-          }}
-        />
-      </MapView>
+          provider={PROVIDER_GOOGLE}
+          initialRegion={props.initialPinCoordinates}>
+          <Marker
+            ref={markerRef}
+            coordinate={props.initialPinCoordinates}
+            draggable={!props.user}
+            onDragStart={() => {
+              props.resetPlaceName();
+            }}
+            onDragEnd={(e) => {
+              props.getPlaceName({
+                lat: e.nativeEvent.coordinate.latitude,
+                lon: e.nativeEvent.coordinate.longitude,
+              });
+            }}>
+            <Callout>
+              <View>
+                {props.user && (
+                  <H3>{`${props.user[1].name} - ${props.user[1].age}y`}</H3>
+                )}
+                <Text>
+                  {props.user
+                    ? `${props.user[1].phone}\n${props.placeName}\n\n${props.user[1].symptoms}`
+                    : props.placeName}
+                </Text>
+              </View>
+            </Callout>
+          </Marker>
+        </MapView>
+      )}
       <SafeAreaView style={{position: 'absolute', top: 0, left: 0}}>
         <TouchableOpacity style={{padding: 10}} onPress={props.goBack}>
           <Icon name="arrow-back" />

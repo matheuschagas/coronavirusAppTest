@@ -5,10 +5,20 @@ import {GeolocationService} from '../../services/GeolocationService';
 import _ from 'lodash';
 
 export const DetailsController = (props) => {
-  const [pinCoordinates, setPinCoordinates] = useState({});
+  const [pinCoordinates, setPinCoordinates] = useState({
+    latitude: 0,
+    longitude: 0,
+    latitudeDelta: 0.02,
+    longitudeDelta: 0.02,
+  });
   const [initialPinCoordinates, setInitialPinCoordinates] = useState({});
   const [placeName, setPlaceName] = useState('Loading...');
-  const [geolocation, setGeolocation] = useState({});
+  const [geolocation, setGeolocation] = useState({
+    latitude: 0,
+    longitude: 0,
+    latitudeDelta: 0.02,
+    longitudeDelta: 0.02,
+  });
   const user = props.route.params?.user;
   useEffect(() => {
     if (user) {
@@ -43,25 +53,38 @@ export const DetailsController = (props) => {
   }, 1000);
 
   const getCoordinates = () => {
-    Geolocation.getCurrentPosition(
-      async (info) => {
-        setInitialPinCoordinates({
-          latitude: info.coords.latitude,
-          longitude: info.coords.longitude,
-          latitudeDelta: 0.02,
-          longitudeDelta: 0.02,
-        });
-        getPlaceName({lat: info.coords.latitude, lon: info.coords.longitude});
-      },
-      (err) => {
-        console.log(err);
-      },
-      {
-        maximumAge: 1000,
-        timeout: 5000,
-        distanceFilter: 10,
-      },
-    );
+    const withoutGeolocation = () => {
+      setInitialPinCoordinates({
+        latitude: 0,
+        longitude: 0,
+        latitudeDelta: 0.02,
+        longitudeDelta: 0.02,
+      });
+      getPlaceName({lat: 0, lon: 0});
+    };
+    if (props.route.params?.geolocationGranted) {
+      Geolocation.getCurrentPosition(
+        async (info) => {
+          setInitialPinCoordinates({
+            latitude: info.coords.latitude,
+            longitude: info.coords.longitude,
+            latitudeDelta: 0.02,
+            longitudeDelta: 0.02,
+          });
+          getPlaceName({lat: info.coords.latitude, lon: info.coords.longitude});
+        },
+        (err) => {
+          withoutGeolocation();
+        },
+        {
+          maximumAge: 1000,
+          timeout: 5000,
+          distanceFilter: 10,
+        },
+      );
+    } else {
+      withoutGeolocation();
+    }
   };
   const goBack = (done = false) => {
     if (done && !user) {
